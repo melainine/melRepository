@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<style>
+.button_css {
+	background-color: #4CAF50;
+	color: white;
+	width: 180px;
+	height: 40px;
+}
+</style>
+
+<meta charset="ISO-8859-1">
+<title>Frontend Client</title>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+<body class="p-3 mb-2 bg-light text-dark">
+
+	<nav
+		class="navbar fixed-top navbar-expand-lg navbar navbar-dark bg-dark">
+
+		<a class="navbar-brand" th:href="@{/}"> <img
+			src="/images/header.png" alt="" height="50">
+		</a>
+
+		<div class="collapse navbar-collapse" id="navbarText">
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item"><a class="nav-link" th:href="@{/devices/}">Devices</a></li>
+				<li class="nav-item"><a class="nav-link"
+					th:href="@{/parameters/}">Parameters</a></li>
+				<li class="nav-item"><a class="nav-link"
+					th:href="@{/locations/}">Locations</a></li>
+				<li class="nav-item"><a class="nav-link" th:href="@{/client/}">Client
+						Registration</a></li>
+				<li th:if="${loggedin}" class="nav-item"><a class="nav-link"
+					th:href="@{/admin/}">User Admin</a></li>
+			</ul>
+			<div>
+				<ul class="nav navbar-nav ml-auto w-100 justify-content-end">
+					<li th:unless="${loggedin}" class="nav-item">
+						<button type="button" class="btn btn-info btn-sm dropdown-toggle"
+							data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Login</button>
+						<div class="dropdown-menu dropdown-menu-right">
+							<form name='f' th:action="@{~/loginfunction}" method='POST'>
+								<div class="form-group">
+									<label for="exampleInputEmail1">Email address</label> <input
+										type="email" class="form-control" id="exampleInputEmail1"
+										name='username' aria-describedby="emailHelp"
+										placeholder="Enter email">
+								</div>
+								<div class="form-group">
+									<label for="exampleInputPassword1">Password</label> <input
+										type="password" class="form-control"
+										id="exampleInputPassword1" name='password'
+										placeholder="Password">
+								</div>
+								<button type="submit" class="btn btn-primary">Submit</button>
+
+
+
+							</form>
+							<div>
+
+								<label>Or</label>
+							</div>
+							<div>
+								<a href="http://localhost:3000/loginpage"> <input
+									class="button_css" type="button" value="With Social Networks" />
+								</a>
+							</div>
+							<div></div>
+						</div>
+					</li>
+					<li th:if="${loggedin}" class="nav-item">
+
+						<form th:action="@{~/logoutfunction}" method='POST'>
+							<button type="submit" class="btn btn-danger btn-sm">Logout</button>
+						</form>
+					</li>
+				</ul>
+			</div>
+
+		</div>
+	</nav>
+	<div class="container-fluid" style="margin-top: 100px">
+		<div class="alert alert-danger alert-dismissible fade show"
+			role="alert" th:unless="${loginerror == null}">
+			<strong>Login error!</strong>
+			<p th:text="${loginerror}"></p>
+			<button type="button" class="close" data-dismiss="alert"
+				aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+
+
+		<div class="alert alert-success alert-dismissible fade show"
+			role="alert" th:unless="${login == null}">
+			<strong>Login success!</strong> Token Value:
+			<p th:text="${login}"></p>
+			<button type="button" class="close" data-dismiss="alert"
+				aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+
+
+
+		<div class="alert alert-success alert-dismissible fade show"
+			role="alert" th:unless="${error == null}">
+			<p th:text="${error}"></p>
+			<button type="button" class="close" data-dismiss="alert"
+				aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+
+
+		<!-- DEVICES START -->
+		<div th:if="${devices}">
+			<div class="jumbotron jumbotron-fluid">
+				<div class="container align-self-center">
+					<h1 class="display-4">Devices API</h1>
+					<p class="lead">Get or Update Device Information</p>
+					<hr class="my-4">
+					<table>
+						<tr>
+							<form th:action="@{/deviceform/get}">
+								<td>Get All Devices</td>
+								<td></td>
+								<td></td>
+								<td><input class="form-check-input" type="checkbox"
+									name="mycheckbox" /><label class="form-check-label"
+									for="mycheckbox">Detail</label></td>
+								<td><button class="btn btn-primary btn-sm" name=button
+										type="submit" value="Submit">Submit</button></td>
+							</form>
+						</tr>
+						<tr>
+							<form th:action="@{/deviceform/getDeviceById}">
+
+								<td>Get Device</td>
+								<td><input class="col-12 form-control" type="text" name=id
+									placeholder="Device Id" /></td>
+								<td></td>
+								<td><input class="form-check-input" type="checkbox"
+									name="mycheckbox" /><label class="form-check-label"
+									for="mycheckbox">Detail</label></td>
+								<td><button class="btn btn-primary btn-sm" name=button1
+										type="submit" value="Submit">Submit</button></td>
+
+							</form>
+						</tr>
+						<tr>
+							<form th:action="@{/deviceform/getChannelOfDeviceById}">
+
+								<td>Get Channel of Device</td>
+								<td><input class="col-12 form-control" type="text"
+									name=deviceid placeholder="Device Id" /></td>
+								<td><input class="col-12 form-control" type="text"
+									name=channelid placeholder="Channel Id" /></td>
+								<td></td>
+								<td><button class="btn btn-primary btn-sm" name=button3
+										type="submit" value="Submit">Submit</button></td>
+
+							</form>
+						</tr>
+						<tr>
+							<form th:action="@{/deviceform/getHardwareOfDeviceById}">
+
+								<td>Get Hardware of Device</td>
+								<td><input class="col-12 form-control" type="text"
+									name=device placeholder="Device Id" /></td>
+								<td><input class="col-12 form-control" type="text"
+									name=hardware placeholder="Hardware Id" /></td>
+								<td></td>
+								<td><button class="btn btn-primary btn-sm" name=button2
+										type="submit" value="Submit">Submit</button></td>
+
+							</form>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<p th:text="${result}"></p>
+		</div>
+		<!-- DEVICES END -->
+
+		<!-- PARAMETERS START -->
+		<div th:if="${parameters}">
+			<div class="jumbotron jumbotron-fluid">
+				<div class="container align-self-center">
+					<h1 class="display-4">Parameters API</h1>
+					<p class="lead">Get or Update Parameter Information</p>
+					<hr class="my-4">
+					<p class="lead">
+					<table>
+						<tr>
+							<form th:action="@{/parameterform/get}">
+								<td>Get All Parameters</td>
+								<td></td>
+								<td></td>
+								<td><input class="form-check-input" type="checkbox"
+									name="mycheckbox" /><label class="form-check-label"
+									for="mycheckbox">Detail</label></td>
+								<td><button class="btn btn-primary btn-sm" name=button
+										type="submit" value="Submit">Submit</button></td>
+							</form>
+						</tr>
+						<tr>
+							<form th:action="@{/parameterform/getparameter}">
+
+								<td>Get Parameter</td>
+								<td><input class="col-12 form-control" type="text" name=id
+									placeholder="Parameter Id" /></td>
+								<td></td>
+								<td><input class="form-check-input" type="checkbox"
+									name="mycheckbox" /><label class="form-check-label"
+									for="mycheckbox">Detail</label></td>
+								<td><button class="btn btn-primary btn-sm" name=button1
+										type="submit" value="Submit">Submit</button></td>
+
+							</form>
+						</tr>
+						<tr>
+							<form th:action="@{/parameterform/getparameterInfo}">
+
+								<td>Get Parameter Info</td>
+								<td><input class="col-12 form-control" type="text"
+									name=info placeholder="Parameter Id" /></td>
+								<td></td>
+								<td></td>
+								<td><button class="btn btn-primary btn-sm" name=button2
+										type="submit" value="Submit">Submit</button></td>
+
+							</form>
+						</tr>
+						<tr>
+							<form th:action="@{/parameterform/getparameterValue}">
+
+								<td>Get Parameter Value</td>
+								<td><input class="col-12 form-control" type="text"
+									name=value placeholder="Parameter Id" /></td>
+								<td></td>
+								<td></td>
+								<td><button class="btn btn-primary btn-sm" name=button3
+										type="submit" value="Submit">Submit</button></td>
+
+							</form>
+						</tr>
+						<tr>
+							<form th:action="@{/parameterform/getparameterSamples}">
+
+								<td>Get Parameter Samples</td>
+								<td><input class="col-12 form-control" type="text"
+									name=parameter placeholder="Parameter Id" /></td>
+								<td><input class="col-12 form-control" type="text"
+									name=storage placeholder="Storage Id" /></td>
+								<td></td>
+								<td><button class="btn btn-primary btn-sm" name=button3
+										type="submit" value="Submit">Submit</button></td>
+
+							</form>
+						</tr>
+						<tr>
+							<form th:action="@{/parameterform/getStorage}">
+
+								<td>Get Storage</td>
+								<td><input class="col-12 form-control" type="text"
+									name=parameterid placeholder="Parameter Id" /></td>
+								<td><input class="col-12 form-control" type="text"
+									name=storageid placeholder="Storage Id" /></td>
+								<td></td>
+								<td><button class="btn btn-primary btn-sm" name=button3
+										type="submit" value="Submit">Submit</button></td>
+
+							</form>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<p th:text="${result}"></p>
+		</div>
+		<!-- PARAMETERS END -->
+
+		<!-- LOCATIONS START -->
+		<div th:if="${locations}">
+			<div class="jumbotron jumbotron-fluid">
+				<div class="container align-self-center">
+					<h1 class="display-4">Locations API</h1>
+					<p class="lead">Get or Update Location Information</p>
+					<hr class="my-4">
+					<form th:action="@{/locationform/get}">
+						<div class="row">
+							<div class="col-sm-2 mb-2">Get All Locations</div>
+							<div class="col-sm-2 mb-2"></div>
+							<div class="col-sm-2 mb-2">
+								<input class="form-check-input" type="checkbox"
+									name="mycheckbox" /><label class="form-check-label"
+									for="mycheckbox">Detail</label>
+							</div>
+							<div class="col-sm-2 mb-2">
+								<button class="btn btn-primary btn-sm" name=button type="submit"
+									value="Submit">Submit</button>
+							</div>
+						</div>
+					</form>
+					<form th:action="@{/locationform/getLocationById}">
+						<div class="row">
+							<div class="col-sm-2 mb-2">Get Location</div>
+							<div class="col-sm-2 mb-2">
+								<input class="col-12 form-control" type="text" name=id
+									placeholder="Id eingeben" th:object="${id}" />
+							</div>
+							<div class="col-sm-2 mb-2"></div>
+							<div class="col-sm-2 mb-2">
+								<button class="btn btn-primary btn-sm" name=button1
+									type="submit" value="Submit">Submit</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<p th:text="${result}"></p>
+		</div>
+		<!-- LOCATIONS END -->
+
+		<!-- USER ADMIN START -->
+		<div th:if="${admin}" class="jumbotron jumbotron-fluid">
+			<div class="container align-self-center">
+
+				<h1 class="display-4">User Admin API</h1>
+				<p class="lead">Grant / Revoke User Permissions</p>
+				<hr class="my-4">
+
+				<form th:action="@{/admin/getUserAcl}">
+					<div>
+						<label for="emailinput">Email address</label> <input type="email"
+							class="form-control" id="emailinput" name='email'
+							aria-describedby="emailHelp" placeholder="Enter email">
+						<button class="btn btn-primary btn-sm" name=button type="submit"
+							value="Submit">Submit</button>
+
+					</div>
+				</form>
+
+				<form class="form-inline" th:action="@{/admin/update}">
+					<div class="row" style="margin-top: 50px">
+						<div th:unless="${ownAcl == null}"
+							class="col-sm bg-secondary rounded">
+							<h3 class="sub-header text-light">Own Permissions</h3>
+
+							<div class="list-group">
+								<div
+									class="list-group-item list-group-item-action flex-column align-items-start"
+									th:each="access, stat : ${ownAcl}">
+									<div class="d-flex w-100 justify-content-between">
+										<h5 class="list-group-item-heading" th:text="${access.id}"></h5>
+										<small><input type="checkbox" name="grantPermissions"
+											th:value="${access.id}"></small>
+									</div>
+									<p class="list-group-item-text" th:text="${access.permission}"></p>
+									<p class="list-group-item-text" th:text="${access.resource}"></p>
+								</div>
+							</div>
+						</div>
+						<div th:unless="${userAcl == null}"
+							class="col-sm bg-secondary rounded">
+							<h3 th:text="${userEmail}" class="sub-header text-light"></h3>
+
+							<div class="list-group">
+								<div
+									class="list-group-item list-group-item-action flex-column align-items-start"
+									th:each="access, stat : ${userAcl}">
+									<div class="d-flex w-100 justify-content-between">
+										<h5 class="list-group-item-heading" th:text="${access.id}"></h5>
+										<small><input type="checkbox" name="revokePermissions"
+											th:value="${access.id}"></small>
+									</div>
+									<p class="list-group-item-text" th:text="${access.permission}"></p>
+									<p class="list-group-item-text" th:text="${access.resource}"></p>
+								</div>
+							</div>
+						</div>
+						<input type="hidden" name="userEmail" th:value="${email}">
+						<button th:unless="${userAcl == null}"
+							class="btn btn-primary btn-sm btn-block" name=button
+							type="submit" value="Submit">Grant / Revoke Permissions</button>
+
+					</div>
+				</form>
+			</div>
+		</div>
+		<!-- USER ADMIN END -->
+
+		<!-- CLIENT REGISTRATION START -->
+		<div th:if="${registration}" class="jumbotron jumbotron-fluid">
+			<div class="container align-self-center">
+
+				<h1 class="display-4">Client Registration</h1>
+				<p class="lead">Anlegen neuer Clients</p>
+				<hr class="my-4">
+
+				<form th:action="@{/client/registration}" th:object="${clientDTO}"
+					method="post">
+
+					<label for="clientId">ClientId</label> <input type="text"
+						class="form-control" id="clientId" th:field="*{clientId}"
+						placeholder="choose a name for your client"> <label
+						for="url">Homepage URL</label> <input type="text"
+						class="form-control" id="url" th:field="*{uri}"
+						placeholder="homepage uri"> <label
+						for="exampleFormControlTextarea1">Additional Information</label>
+					<textarea class="form-control" id="exampleFormControlTextarea1"
+						rows="3" th:field="*{additionalInformation}"></textarea>
+
+					<button class="btn btn-primary btn-sm" name=button type="submit"
+						value="Submit">Submit</button>
+					<div th:text="${error}"></div>
+				</form>
+
+				<div th:if="${client}" class="container" style="margin-top: 100px">
+					<h3>Created New Client</h3>
+					<table class="table table-hover alert-info">
+						<tr>
+							<th scope="col">ClientId</th>
+							<th scope="col">ClientSecret</th>
+							<th scope="col">Scopes</th>
+							<th scope="col">Resource-Ids</th>
+							<th scope="col">Registered Redirect Uris</th>
+							<th scope="col">Access Token Validity</th>
+							<th scope="col">Refresh Token Validity</th>
+						</tr>
+						<tr th:object="${client}">
+							<td><span th:text="${client.clientId}"></span></td>
+							<td><span th:text="${client.clientSecret}"></span></td>
+							<td><span th:text="${client.scope}"></span></td>
+							<td><span th:text="${client.resourceIds}"></span></td>
+							<td><span th:text="${client.registeredRedirectUri}"></span></td>
+							<td><span th:text="${client.accessTokenValiditySeconds}"></span></td>
+							<td><span th:text="${client.refreshTokenValiditySeconds}"></span></td>
+						</tr>
+					</table>
+					<div style="margin-top: 20px" class="panel panel-success">
+						<div class="panel-heading">
+							<h4 class="panel-title">Additional Client Information</h4>
+						</div>
+						<div class="panel-body">
+							<div th:text="${clientDTO.additionalInformation}"></div>
+						</div>
+					</div>
+					<hr class="my-4">
+					<table class="table table-borderless">
+						<tbody>
+							<tr>
+								<th scope="row">Access Token Uri</th>
+								<td th:text="${accessTokenUri}"></td>
+							</tr>
+							<tr>
+								<th scope="row">User Authorization Uri</th>
+								<td th:text="${userAuthorizationUri}"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+			</div>
+		</div>
+		<!-- CLIENT REGISTRATION END -->
+
+	</div>
+	<td th:if="${loggedin}">
+		<img th:src="${cover}" style="width:100%"/>
+		<p class="ex2">Logged in as: <span class="ex1" th:text="${name}">name</span></p>
+		
+	</td>
+	<td th:if="${loggedinerror}">
+		<img th:src="${cover}" style="width:100%"/>
+		<p class="ex2">404: <span class="ex1" th:text="${message}">name</span></p>
+		
+	</td>
+
+
+</body>
+</html>

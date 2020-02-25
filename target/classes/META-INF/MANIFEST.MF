@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Built-By: mel3a
+Build-Jdk: 13.0.1
+Implementation-Title: client-frontend
+Implementation-Version: 0.0.1-SNAPSHOT
+Implementation-Vendor-Id: org.ict
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-boot
+ -starter-parent/client-frontend
+Created-By: Maven Integration for Eclipse
+
