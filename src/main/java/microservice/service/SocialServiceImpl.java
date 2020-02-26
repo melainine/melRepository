@@ -48,7 +48,7 @@ public class SocialServiceImpl implements SocialService {
 	}
 	
 	private GitHubConnectionFactory createGithubConnection() {
-		return new GitHubConnectionFactory(googleId, googleSecret);
+		return new GitHubConnectionFactory(githubId, githubSecret);
 	}
 
 	@Override
@@ -98,7 +98,7 @@ public class SocialServiceImpl implements SocialService {
 	@Override
 	public String githublogin() {
 		OAuth2Parameters parameters = new OAuth2Parameters();
-		parameters.setRedirectUri("http://localhost:3000/github");
+		parameters.setRedirectUri("http://localhost:3000/user/oauth2/github/callback");
 		parameters.setScope("read:user");
 
 		return createGithubConnection().getOAuthOperations().buildAuthenticateUrl(parameters);	}
@@ -106,7 +106,7 @@ public class SocialServiceImpl implements SocialService {
 	@Override
 	public String getGithubAccessToken(String code) {
 		return createGithubConnection().getOAuthOperations()
-				.exchangeForAccess(code, "http://localhost:3000/github", null).getAccessToken();
+				.exchangeForAccess(code, "http://localhost:3000/user/oauth2/github/callback", null).getAccessToken();
 	}
 
 	@Override

@@ -1,9 +1,7 @@
 package microservice.service;
 
 
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.social.facebook.api.User;
-import org.springframework.social.github.api.GitHubUser;
 import org.springframework.social.github.api.GitHubUserProfile;
 import org.springframework.social.google.api.plus.Person;
 

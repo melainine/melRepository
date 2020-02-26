@@ -1,5 +1,7 @@
 package microservice.controller;
 
+import org.hibernate.validator.internal.util.logging.LoggerFactory;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.github.api.GitHubUserProfile;
 import org.springframework.stereotype.Controller;
@@ -15,8 +17,10 @@ import microservice.service.SocialService;
 public class GithubController {
 	@Autowired
 	private SocialService githubService;
+	
+	private static final Logger logger = org.slf4j.LoggerFactory.getLogger(GithubController.class);
 
-	@GetMapping(value = "/oauth2/twitter")
+	@GetMapping(value = "/oauth2/github")
 	public RedirectView githublogin() {
 		RedirectView redirectView = new RedirectView();
 		String url = githubService.githublogin();
@@ -25,7 +29,7 @@ public class GithubController {
 
 	}
 
-	@GetMapping(value = "/github")
+	@GetMapping(value = "/user/oauth2/github/callback")
 	public String github(@RequestParam("code") String code) {
 		String accessToken = githubService.getGithubAccessToken(code);
 		return "redirect:/githubprofiledata/" + accessToken;
@@ -41,10 +45,11 @@ public class GithubController {
 		try {
 			GitHubUserProfile user = githubService.getGithubUserProfile(accessToken);
 
+			logger.info(user+" is logging");
 			mv.setViewName("home");
 			mv.addObject("loggedin", true);
 			System.out.println("the user firstname is: " +user.getEmail());
-			mv.addObject("name", user.getName()+ " " + user.getUsername());
+			mv.addObject("name", user.getUsername());
 			return mv;
 			
 		} catch (Exception e) {

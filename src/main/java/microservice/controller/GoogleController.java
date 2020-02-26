@@ -35,25 +35,25 @@ public class GoogleController {
 
 	@GetMapping(value = "/googleprofiledata/{accessToken:.+}")
 	public ModelAndView googleprofiledata(@PathVariable String accessToken, ModelAndView mv) {
-//		mv.setViewName("home");
-//		mv.addObject("loggedin", true);
-//		return mv ;
+		mv.setViewName("home");
+		mv.addObject("loggedin", true);
+		return mv ;
 
-		try {
-			Person user = googleService.getGoogleUserProfile(accessToken);
-
-			mv.setViewName("home");
-			mv.addObject("loggedin", true);
-			System.out.println("the user firstname is: " +user.getGivenName());
-			mv.addObject("cover", user.getImageUrl());
-			mv.addObject("name", user.getGivenName()+ " " + user.getFamilyName());
-			return mv;
-			
-		} catch (Exception e) {
-			mv.addObject("loggedinerror", true);
-			mv.addObject("message", e.getMessage());
-			return mv ;
-		}
+//		try {
+//			Person user = googleService.getGoogleUserProfile(accessToken);
+//
+//			mv.setViewName("home");
+//			mv.addObject("loggedin", true);
+//			System.out.println("the user firstname is: " +user.getGivenName());
+//			mv.addObject("cover", user.getImageUrl());
+//			mv.addObject("name", user.getGivenName()+ " " + user.getFamilyName());
+//			return mv;
+//			
+//		} catch (Exception e) {
+//			mv.addObject("loggedinerror", true);
+//			mv.addObject("message", e.getMessage());
+//			return mv ;
+//		}
 		
 	}
 
