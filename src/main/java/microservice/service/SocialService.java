@@ -1,8 +1,11 @@
 package microservice.service;
 
 
+import java.security.Principal;
+
 import org.springframework.social.facebook.api.User;
 import org.springframework.social.github.api.GitHubUserProfile;
+import org.springframework.social.google.api.Google;
 import org.springframework.social.google.api.plus.Person;
 
 public interface SocialService {

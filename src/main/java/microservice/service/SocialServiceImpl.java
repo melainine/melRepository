@@ -1,5 +1,7 @@
 package microservice.service;
 
+import java.sql.Connection;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.social.facebook.api.Facebook;
@@ -77,7 +79,7 @@ public class SocialServiceImpl implements SocialService {
 	public String googlelogin() {
 		OAuth2Parameters parameters = new OAuth2Parameters();
 		parameters.setRedirectUri("http://localhost:3000/google");
-		parameters.setScope("profile");
+		parameters.setScope("email");
 		
 		return createGoogleConnection().getOAuthOperations().buildAuthenticateUrl(parameters);
 	}
@@ -90,8 +92,8 @@ public class SocialServiceImpl implements SocialService {
 
 	@Override
 	public Person getGoogleUserProfile(String accessToken) {
-		Google google = new GoogleTemplate(accessToken);
-		Person person = google.plusOperations().getGoogleProfile();
+		Google google = new GoogleTemplate();
+		Person person = google.plusOperations().getPerson("me");
 		return person;
 	}
 
