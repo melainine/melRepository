@@ -131,6 +131,6 @@
     <factorypathentry kind="VARJAR" id="M2_REPO/asm/asm/1.5.3/asm-1.5.3.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/commons-collections/commons-collections/2.1.1/commons-collections-2.1.1.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/javax/persistence/persistence-api/1.0/persistence-api-1.0.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="EXTJAR" id="C:\Users\mel3a\Documents\Marterprojekt_wrk\client-frontend\target\postgresql-42.2.9.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="EXTJAR" id="C:\Users\mel3a\Documents\Marterprojekt_wrk\clientFrontend\target\postgresql-42.2.9.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="PLUGIN" id="org.eclipse.jst.ws.annotations.core" enabled="true" runInBatchMode="false"/>
 </factorypath>

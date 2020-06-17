@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <style>
 .button_css {
@@ -7,6 +8,81 @@
 	color: white;
 	width: 180px;
 	height: 40px;
+}
+
+.dropdown {
+	float: left;
+	overflow: hidden;
+}
+
+.dropdown .dropbtn {
+	font-size: 16px;
+	border: none;
+	outline: none;
+	color: white;
+	padding: 14px 16px;
+	background-color: inherit;
+	font-family: inherit;
+	margin: 0;
+}
+
+.dropdown-content {
+	display: none;
+	position: absolute;
+	background-color: #f9f9f9;
+	min-width: 160px;
+	box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+	z-index: 1;
+}
+
+.dropdown-content a {
+	float: none;
+	color: black;
+	padding: 12px 16px;
+	text-decoration: none;
+	display: block;
+	text-align: left;
+}
+
+.dropdown-content a:hover {
+	background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+	display: block;
+}
+
+#customers {
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	border-collapse: collapse;
+	width: 50%;
+	margin-top: 2%;
+}
+
+#customers td, #customers th {
+	border: 1px solid #ddd;
+	padding: 8px;
+}
+
+#customers tr:nth-child(even) {
+	background-color: #f2f2f2;
+}
+
+#customers tr:hover {
+	background-color: #ddd;
+}
+
+#customers th {
+	padding-top: 12px;
+	padding-bottom: 12px;
+	text-align: left;
+	background-color: #484851;
+	color: white;
+}
+
+.myH1 {
+	font-color: #a0a0ab;
+	font-size: 16px;
 }
 </style>
 
@@ -21,7 +97,7 @@
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </head>
-<body class="p-3 mb-2 bg-light text-dark" ng-app="app" ng-controller="home as home">
+<body class="p-3 mb-2 bg-light text-dark">
 
 	<nav
 		class="navbar fixed-top navbar-expand-lg navbar navbar-dark bg-dark">
@@ -31,7 +107,6 @@
 		</a>
 
 		<div class="collapse navbar-collapse" id="navbarText">
-	
 			<ul class="navbar-nav mr-auto">
 				<li class="nav-item"><a class="nav-link" th:href="@{/devices/}">Devices</a></li>
 				<li class="nav-item"><a class="nav-link"
@@ -40,15 +115,13 @@
 					th:href="@{/locations/}">Locations</a></li>
 				<li class="nav-item"><a class="nav-link" th:href="@{/client/}">Client
 						Registration</a></li>
-				<li th:if="${loggedin}" class="nav-item" ><a class="nav-link"
-					th:href="@{/admin/}" >User Admin</a></li>
-				<li  class="nav-item" ng-show="home.authenticated"><a class="nav-link"
-					th:href="@{/admin/}" >User Admin</a></li>
+				<li th:if="${loggedin}" class="nav-item"><a class="nav-link"
+					th:href="@{/admin/}">User Admin</a></li>
 			</ul>
 			<div>
 				<ul class="nav navbar-nav ml-auto w-100 justify-content-end">
 					<li th:unless="${loggedin}" class="nav-item">
-						<button type="button" class="btn btn-info btn-sm dropdown-toggle" ng-show="!home.authenticated"
+						<button type="button" class="btn btn-info btn-sm dropdown-toggle"
 							data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Login</button>
 						<div class="dropdown-menu dropdown-menu-right">
 							<form name='f' th:action="@{~/loginfunction}" method='POST'>
@@ -84,13 +157,7 @@
 					<li th:if="${loggedin}" class="nav-item">
 
 						<form th:action="@{~/logoutfunction}" method='POST'>
-							<button type="submit" class="btn btn-danger btn-sm" >Logout</button>
-						</form>
-					</li>
-					<li class="nav-item" ng-show="home.authenticated">
-
-						<form ng-click="home.logout()" method='POST'>
-							<button type="submit" class="btn btn-danger btn-sm" >Logout</button>
+							<button type="submit" class="btn btn-danger btn-sm">Logout</button>
 						</form>
 					</li>
 				</ul>
@@ -485,11 +552,19 @@
 		<!-- CLIENT REGISTRATION END -->
 
 	</div>
-	
-	
-	 <td th:if="${loggedin}">
-		
-		<p class="ex2">Logged in as: <span class="ex1" th:text="${name}">name</span></p>
+	<td th:if="${loggedin}"><img th:src="${cover}" style="width: 100%" />
+		<h4 class="ex2">
+			Logged in as: <span class="ex1" th:text="${name}">name</span>
+		</h4>
+
+		<table id="customers">
+			<tr>
+				<th class="myH1">Device Number</th>
+				<th class="myH1">Device-ID</th>
+				<th class="myH1">Device-Name</th>
+				<th class="myH1">Options</th>
+
+			</tr>
 			<tr th:each="count : ${counts}">
 				<td th:text="${countStat.index + 1}"></td>
 				<td th:text="${count.deviceId}"></td>
@@ -509,60 +584,14 @@
 
 
 			</tr>
-		
-	</td>
-	<td th:if="${loggedinerror}">
-		
-		<p class="ex2">Error: <span class="ex1" th:text="${error}">name</span></p>
-		
-	</td> 
- <div class="container" ng-show="home.authenticated" >
-	<p class="ex2">	Logged in as: <span ng-bind="home.user" class="ex1" ></span></p>
-		<tr th:each="count : ${counts}">
-				<td th:text="${countStat.index + 1}"></td>
-				<td th:text="${count.deviceId}"></td>
-				<td th:text="${count.device}"></td>
-				<td><button type="button" class="btn btn-info btn-sm dropdown-toggle"
-							data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions</button>
-						<div class="dropdown-menu dropdown-menu-right">
-							<form >
-								<div class="form-group">
-									<button type="button" onclick="alert('This is the first action')">Action 1</button> 
-								</div>
-								<div class="form-group">
-									<button type="button" onclick="alert('This is the second action')">Action 2</button> 
-								</div>
-							</form>
-						</div></td>
+		</table></td>
+	<td th:if="${loggedinerror}"><img th:src="${cover}"
+		style="width: 100%" />
+		<p class="ex2">
+			404: <span class="ex1" th:text="${message}">name</span>
+		</p></td>
 
-
-			</tr>
-	</div> 
+		
 
 </body>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.js"></script>
-  <script type="text/javascript">
-	angular.module("app", []).controller("home", function($http) {
-		var self = this;
-		$http.get("/googleuser").success(function(data) {
-			self.user = data.name;
-			self.authenticated = true;
-			
-		}).error(function() {
-			self.user = "N/A";
-			self.authenticated = false;
-			self.loggedin = false;
-
-		});
-		self.logout = function() {
-			$http.post('/logout', {}).success(function() {
-				self.authenticated = false;
-				$location.path("/");
-			}).error(function(data) {
-				console.log("Logout failed")
-				self.authenticated = false;
-			});
-		};
-	});
-</script> 
 </html>
